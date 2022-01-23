@@ -57,7 +57,7 @@ const Task: React.FC<TaskProps> = ({
           {...provided.dragHandleProps}
         >
           <h3>{name}</h3>
-          <h6>{deadline.toISOString()}</h6>
+          <h6>{deadline}</h6>
           <span>{description}</span>
         </li>
       )}

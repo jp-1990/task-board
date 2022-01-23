@@ -2,6 +2,6 @@ interface TaskType {
   id: string;
   name: string;
   description: string;
-  deadline: Date;
+  deadline: string;
 }
 export default TaskType;

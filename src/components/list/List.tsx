@@ -4,10 +4,11 @@ import styles from "./List.module.css";
 
 interface ListProps {
   name: string;
+  id: string;
 }
-const List: React.FC<ListProps> = ({ name, children }) => {
+const List: React.FC<ListProps> = ({ name, id, children }) => {
   return (
-    <Droppable droppableId={name}>
+    <Droppable droppableId={id}>
       {(provided) => (
         <section className={styles.list}>
           <h2>{name}</h2>
