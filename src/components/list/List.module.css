@@ -1,0 +1,6 @@
+.list {
+  width: fit-content;
+  border: 1px solid black;
+  padding: 1rem;
+  user-select: none;
+}

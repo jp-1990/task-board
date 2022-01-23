@@ -1,0 +1,24 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: calc(10px + 2vmin);
+  width: 100vw;
+  border-bottom: 2px solid black;
+}
+
+.App-header h3 {
+  margin-left: 2vw;
+}
+
+.App-link {
+  color: rgb(112, 76, 182);
+}
+
+.List-container {
+  display: flex;
+}
