@@ -2,48 +2,52 @@ import React, { useEffect, useState } from "react";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 
 import { useSelector, useDispatch } from "./app/hooks";
-import { addList, moveTasks, removeList } from "./components/list/listSlice";
+import { addList, addTask, moveTasks } from "./app/appSlice";
 
 import { List, Task } from "./components";
+import { apiQueries } from "./utils";
 import { TaskType } from "./types";
 import "./App.css";
 
-const tasks = Array.from(Array(6)).map((el, i) => {
-  return {
-    id: `${i}`,
-    name: `task-${i}`,
-    description: `Description from task ${i}`,
-    deadline: new Date(Date.now()).toISOString(),
-  };
-});
-const tasks2 = Array.from(Array(6)).map((el, i) => {
-  return {
-    id: `${i + 6}`,
-    name: `task-${i + 6}`,
-    description: `Description from task ${i + 6}`,
-    deadline: new Date(Date.now()).toISOString(),
-  };
-});
-
 function App() {
+  const [listName, setListName] = useState<string>("");
   const lists = useSelector((state) => state.lists.value);
   const dispatch = useDispatch();
+  const { getAllItems, createList } = apiQueries;
 
+  // entry point for data (query all items)
   useEffect(() => {
-    if (!lists.length) {
-      dispatch(addList({ id: "0", name: "list-0", tasks }));
-      dispatch(addList({ id: "1", name: "list-1", tasks: tasks2 }));
-    }
-  });
+    const getData = async () => await getAllItems();
+    getData().then((data) => {
+      data.tasks.sort(
+        (a: { index: number }, b: { index: number }) => +a.index - +b.index
+      );
+
+      for (const list of data.lists) {
+        dispatch(
+          addList({
+            list_id: list.list_id,
+            name: list.name,
+            tasks: [],
+            type: list.type,
+          })
+        );
+      }
+      for (const task of data.tasks) {
+        if (task.overdue) console.log(`task ${task.task_id} is overdue!`);
+
+        dispatch(addTask(task));
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [selectedTasks, setSelectedTasks] = useState<TaskType[]>([]);
   const [dragging, setDragging] = useState<boolean>(false);
 
   const handleOnDragStart = () => setDragging(true);
-
   const handleOnDragEnd = (result: DropResult) => {
     if (!result.destination) return;
-
     dispatch(
       moveTasks({
         source: { id: result.source.droppableId, index: result.source.index },
@@ -57,10 +61,34 @@ function App() {
     setDragging(false);
   };
 
+  const handleListNameInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => setListName(event.target.value);
+  const handleCreateList = async () => {
+    const newList = await createList({ name: listName });
+    dispatch(
+      addList({
+        list_id: newList[0].list_id,
+        name: listName,
+        type: "list",
+        tasks: [],
+      })
+    );
+  };
+
   return (
     <div className="App">
       <header className="App-header">
         <h3>Task Board</h3>
+        <div className="create-list-container">
+          <span>New List:</span>
+          <input
+            value={listName}
+            onChange={handleListNameInputChange}
+            placeholder="List name..."
+          ></input>
+          <button onClick={handleCreateList}>Create New List</button>
+        </div>
       </header>
       <DragDropContext
         onDragEnd={handleOnDragEnd}
@@ -68,10 +96,15 @@ function App() {
       >
         <div className="List-container">
           {lists.map((list) => (
-            <List key={list.id} name={list.name} id={list.id}>
+            <List
+              key={list.list_id}
+              name={list.name}
+              id={list.list_id}
+              length={list.tasks.length}
+            >
               {list.tasks?.map((task, index) => (
                 <Task
-                  key={task.id}
+                  key={task.task_id}
                   index={index}
                   task={task}
                   tasks={list.tasks}

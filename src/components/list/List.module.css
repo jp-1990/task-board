@@ -1,6 +1,10 @@
 .list {
-  width: fit-content;
-  border: 1px solid black;
+  width: 360px;
+  border-right: 1px solid black;
   padding: 1rem;
   user-select: none;
+}
+
+.list ul {
+  padding: 0;
 }

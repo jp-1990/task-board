@@ -5,9 +5,9 @@ const toggleSingleSelection = (
   state: TaskType[],
   setState: React.Dispatch<React.SetStateAction<TaskType[]>>
 ) => {
-  const { id } = task;
-  if (state?.find((el) => el.id === id) && state.length === 1) {
-    setState((prev) => prev?.filter((el) => el.id !== id));
+  const { task_id } = task;
+  if (state?.find((el) => el.task_id === task_id) && state.length === 1) {
+    setState((prev) => prev?.filter((el) => el.task_id !== task_id));
   } else {
     setState([{ ...task }]);
   }
@@ -18,9 +18,9 @@ const toggleGroupSelection = (
   state: TaskType[],
   setState: React.Dispatch<React.SetStateAction<TaskType[]>>
 ) => {
-  const { id } = task;
-  if (state?.find((el) => el.id === id)) {
-    setState((prev) => prev?.filter((el) => el.id !== id));
+  const { task_id } = task;
+  if (state?.find((el) => el.task_id === task_id)) {
+    setState((prev) => prev?.filter((el) => el.task_id !== task_id));
   } else {
     setState((prev) => [...prev, { ...task }]);
   }
@@ -39,19 +39,16 @@ const toggleRangeSelection = (
 
   let startIndex: number;
   let endIndex: number;
-  const tasksToSelect = tasks.reduce((output, current, index) => {
+  const tasksToSelect = tasks.reduce((output, current, i) => {
     if (endIndex !== undefined && startIndex === undefined) {
-      startIndex = Number(state[state.length - 1].id);
-    } else if (state[0].id === current.id && startIndex === undefined)
-      startIndex = index;
-    if (task.id === current.id) endIndex = index;
+      startIndex = Number(state[state.length - 1].index);
+    } else if (state[0].index === current.index && startIndex === undefined)
+      startIndex = i;
+    if (task.index === current.index) endIndex = i;
 
-    if (index >= startIndex && (endIndex === undefined || index <= endIndex)) {
+    if (i >= startIndex && (endIndex === undefined || i <= endIndex)) {
       output.push(current);
-    } else if (
-      index >= endIndex &&
-      (startIndex === undefined || index <= startIndex)
-    ) {
+    } else if (i >= endIndex && (startIndex === undefined || i <= startIndex)) {
       output.push(current);
     }
 

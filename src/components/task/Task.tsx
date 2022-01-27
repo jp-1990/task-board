@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
+import { useDispatch } from "../../app/hooks";
 import { TaskType } from "../../types";
 import { toggle } from "../../utils";
+import { UpdateTask } from "../update-task";
+import { apiQueries } from "../../utils";
+import { editTask, removeTask } from "../../app/appSlice";
 import styles from "./Task.module.css";
 
 const isBeingDragged = (task: TaskType, selectedTasks: TaskType[]) =>
-  !!selectedTasks.find(({ id }) => id === task.id);
+  !!selectedTasks.find(({ task_id }) => task_id === task.task_id);
 
 interface TaskProps {
   task: TaskType;
@@ -23,7 +27,11 @@ const Task: React.FC<TaskProps> = ({
   setSelected,
   dragging,
 }) => {
-  const { id, name, description, deadline } = task;
+  const [showUpdate, setShowUpdate] = useState<boolean>(false);
+  const { task_id, list_id, name, description, deadline, completed } = task;
+
+  const { deleteTask, completeTask } = apiQueries;
+  const dispatch = useDispatch();
 
   const handleOnClick: React.MouseEventHandler<HTMLLIElement> = (e) => {
     if (e.ctrlKey || e.metaKey) {
@@ -35,18 +43,46 @@ const Task: React.FC<TaskProps> = ({
     }
   };
 
+  const handleCompleteTask = async (e: any) => {
+    try {
+      e.stopPropagation();
+      await completeTask({ id: task_id, boolean: !completed });
+      dispatch(editTask({ task_id, list_id, completed: !completed }));
+    } catch (err) {
+      console.error(`handleCompleteTask failed: ${err}`);
+    }
+  };
+
+  const handleDeleteTask = async (e: any) => {
+    try {
+      e.stopPropagation();
+      for (const task of selected) {
+        await deleteTask({ id: task.task_id });
+        dispatch(removeTask({ task_id: task.task_id, list_id: task.list_id }));
+      }
+    } catch (err) {
+      console.error(`handleDeleteTask failed: ${err}`);
+    }
+  };
+
+  const toggleShowUpdate = (e: any) => {
+    e.stopPropagation();
+    setShowUpdate((prev) => !prev);
+  };
   return (
     <Draggable
-      key={id}
-      draggableId={id}
+      key={task_id}
+      draggableId={`${task_id}`}
       index={index}
       isDragDisabled={!isBeingDragged(task, selected)}
     >
       {(provided) => (
         <li
           onClick={handleOnClick}
-          className={`${styles.task} ${
-            selected?.find((el) => el.id === id) ? `${styles.selected}` : ""
+          className={`${styles.task} ${completed ? styles.completed : ""} ${
+            selected?.find((el) => el.task_id === task_id)
+              ? `${styles.selected}`
+              : ""
           } ${
             dragging && isBeingDragged(task, selected)
               ? `${styles.dragging}`
@@ -57,8 +93,28 @@ const Task: React.FC<TaskProps> = ({
           {...provided.dragHandleProps}
         >
           <h3>{name}</h3>
-          <h6>{deadline}</h6>
+          <h6>{new Date(deadline).toLocaleString()}</h6>
           <span>{description}</span>
+          {!showUpdate && (
+            <button onClick={toggleShowUpdate}>Show Update Form</button>
+          )}
+          {showUpdate && (
+            <>
+              <UpdateTask
+                task_id={task_id}
+                list_id={list_id}
+                name={name}
+                description={description}
+                deadline={deadline}
+                setShowUpdate={setShowUpdate}
+              />
+              <button onClick={toggleShowUpdate}>Hide Update Form</button>
+            </>
+          )}
+          <div className={styles.buttonDiv}>
+            <button onClick={handleDeleteTask}>Delete</button>
+            <button onClick={handleCompleteTask}>Mark As Complete</button>
+          </div>
         </li>
       )}
     </Draggable>

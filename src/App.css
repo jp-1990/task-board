@@ -15,6 +15,20 @@
   margin-left: 2vw;
 }
 
+.create-list-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  margin-left: 4rem;
+}
+.create-list-container span {
+  font-size: 1rem;
+}
+.create-list-container button {
+  margin-top: 0.3rem;
+}
+
 .App-link {
   color: rgb(112, 76, 182);
 }
