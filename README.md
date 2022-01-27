@@ -1,44 +1,58 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
 
-## Available Scripts
+# Task Board
 
-In the project directory, you can run:
+**Hosted on Firebase**  
+https://task-board-184e1.web.app/
 
-### `npm start`
+## Summary
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This project was built to meet the follow set of user stories:
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+- As a user, I can view all lists and tasks which have been created
+- As a user, I can create an empty list with a name property
+- As a user, I can delete an entire list with all its tasks
 
-### `npm test`
+- As a user, I can add new tasks to an existing list with a name, description and deadline properties
+- As a user, I can update the name, description and deadline of a task within a list
+- As a user, I can move a single task to a different list
+- As a user, I can move multiple tasks to a different list in a single transaction
+- As a user, I can delete a task from a list
+- As a user, I can delete multiple tasks from a list in a single transaction
+- As a user, I can complete a task
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- As a user, I will receive an email (mock this functionality by logging to stdout) when a task is completed
+- As a user, I will receive an email (mock this functionality by logging to stdout) when a task passes it's deadline
 
-### `npm run build`
+The mocked email for overdue tasks logs on the task-board-api, rather than the frontend, however on querying for a list of a tasks, a log will be displayed for any tasks which are marked as overdue at that point.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Architecture
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### Client
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+To accomplish the above, a React-Redux frontend, deployed to Firebase, allows the user to interact with data fetched from the API using Axios. The returned data is dispatched to the store, and any subsequent queries also trigger updates to the store in addition to writing to the database, giving the user the impression of instant updates. This idea is inspired by Apollo Client's cache and optimistic response features.
 
-### `npm run eject`
+### API
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+The client interacts with an Express based REST API hosted on Azure, which serves a limited set of endpoints (see https://github.com/jp-1990/task-board-api). An interval runs on this server to check, and update, the 'overdue' property of a task once the deadline has passed.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Database
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The endpoints exposed by this API allow the caller to interact with a PostgreSQL database, also hosted on Azure, storing the required data in a one-to-many relationship. A list may have many tasks, and as such, the foreign key on a task relates to the primary key of a list (both named list_id). Cascading updates and deletes are enabled to provide the functionality to delete all tasks connected to a list when the list is deleted.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Technologies Used
 
-## Learn More
+- TypeScript
+- React
+- Redux
+- Axios
+- Express
+- Azure
+- Firebase
+- PostgreSQL
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## User Interactions
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+In order to move tasks between lists, the user must drag and drop them. Multiple tasks may be selected at once, and can be dragged and dropped within their list, or into another list. Their existing order will be maintained. Tasks may only be selected from one list at a time.
+
+Multi-selection is handled via modifier keys. Ctrl/cmd+click to select specific tasks or shift+click to select a range.
