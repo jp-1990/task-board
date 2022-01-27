@@ -1,38 +1,45 @@
-.App {
+.app {
   text-align: center;
 }
 
-.App-header {
+.appHeader {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   font-size: calc(10px + 2vmin);
   width: 100vw;
   border-bottom: 2px solid black;
 }
 
-.App-header h3 {
+.appHeader h3 {
   margin-left: 2vw;
 }
 
-.create-list-container {
+.headerLeft {
+  display: flex;
+}
+.headerRight {
+  display: flex;
+  font-size: 1rem;
+  padding-right: 4rem;
+  width: 500px;
+  text-align: left;
+}
+
+.createListContainer {
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: left;
   margin-left: 4rem;
 }
-.create-list-container span {
+.createListContainer span {
   font-size: 1rem;
 }
-.create-list-container button {
+.createListContainer button {
   margin-top: 0.3rem;
 }
 
-.App-link {
-  color: rgb(112, 76, 182);
-}
-
-.List-container {
+.listContainer {
   display: flex;
 }

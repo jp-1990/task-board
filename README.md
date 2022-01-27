@@ -5,6 +5,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 **Hosted on Firebase**  
 https://task-board-184e1.web.app/
 
+NOTE: API may take time to start if it has been in an idle state for some time. This can take up to a couple of minutes.
+
 ## Summary
 
 This project was built to meet the follow set of user stories:

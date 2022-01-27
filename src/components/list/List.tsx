@@ -6,12 +6,17 @@ import { useDispatch } from "../../app/hooks";
 import { apiQueries } from "../../utils";
 import { CreateTask } from "../create-task";
 
-interface ListProps {
+interface Props {
   name: string;
   length: number;
   id: number;
 }
-const List: React.FC<ListProps> = ({ name, id, length, children }) => {
+/**
+ *
+ * @param {Props} props - {@link Props}
+ * @description Component to provide a container within which Task components should be displayed. Acts as a droppable container, allowing tasks to be moved around within a List, and between Lists. Also provides the user the functionality to delete a list and all tasks related to it.
+ */
+const List: React.FC<Props> = ({ name, id, length, children }) => {
   const dispatch = useDispatch();
   const { deleteList } = apiQueries;
 

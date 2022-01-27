@@ -2,18 +2,20 @@ import React, { useState } from "react";
 import { addTask } from "../../app/appSlice";
 import { useDispatch } from "../../app/hooks";
 import { apiQueries } from "../../utils";
+import { TaskType } from "../../types";
 
 import styles from "./CreateTask.module.css";
 
-interface Task {
-  name: string;
-  description: string;
-  deadline: string;
-}
+type Task = Pick<TaskType, "name" | "deadline" | "description">;
 interface Props {
   list_id: number;
   nextIndex: number;
 }
+/**
+ *
+ * @param {Props} props - {@link Props}
+ * @description Component to accept user input and create a new task with a name, description and deadline (list_id and index are added automatically based on the current length of the list and the list_id). Uses redux store and fires apiQuery.createTask to perform create.
+ */
 const CreateTask: React.FC<Props> = ({ list_id, nextIndex }) => {
   const initialState = {
     name: "",
@@ -25,7 +27,7 @@ const CreateTask: React.FC<Props> = ({ list_id, nextIndex }) => {
   const { createTask } = apiQueries;
   const dispatch = useDispatch();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTaskInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTask((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
@@ -48,26 +50,27 @@ const CreateTask: React.FC<Props> = ({ list_id, nextIndex }) => {
       console.error(`createTask failed: ${err}`);
     }
   };
+
   return (
-    <div className={styles.createTaskContainer}>
+    <div className={styles.container}>
       <span>New Task:</span>
       <input
         id="name"
         value={task.name}
-        onChange={handleChange}
+        onChange={handleTaskInputChange}
         placeholder="Task name..."
       />
       <input
         id="description"
         value={task.description}
-        onChange={handleChange}
+        onChange={handleTaskInputChange}
         placeholder="Task description..."
       />
       <input
         id="deadline"
         type={"datetime-local"}
         value={task.deadline}
-        onChange={handleChange}
+        onChange={handleTaskInputChange}
         placeholder="Task deadline..."
       />
       <button onClick={handleCreateTask}>Create New Task</button>

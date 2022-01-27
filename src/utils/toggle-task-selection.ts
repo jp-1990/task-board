@@ -1,5 +1,13 @@
 import { TaskType } from "../types";
 
+/**
+ *
+ * @param task - target task
+ * @param state - currently selected tasks state
+ * @param setState - React state update function to set currently selected task state
+ *
+ * @description Toggle a single task into and out of the selected tasks array. Used for un-modified single click selection.
+ */
 const toggleSingleSelection = (
   task: TaskType,
   state: TaskType[],
@@ -13,6 +21,14 @@ const toggleSingleSelection = (
   }
 };
 
+/**
+ *
+ * @param task - target task
+ * @param state - currently selected tasks state
+ * @param setState - React state update function to set currently selected task state
+ *
+ * @description Toggle a single task into and out of the selected tasks array, but retain any other tasks in the array. Used for Ctrl/Cmd click selection, where the aim is to select multiple items.
+ */
 const toggleGroupSelection = (
   task: TaskType,
   state: TaskType[],
@@ -26,6 +42,15 @@ const toggleGroupSelection = (
   }
 };
 
+/**
+ *
+ * @param task - target task
+ * @param tasks - all tasks in the target list
+ * @param state - currently selected tasks state
+ * @param setState - React state update function to set currently selected task state
+ *
+ * @description Toggle multiple tasks into and out of the selected tasks array. Add or remove other tasks based on the start or end index of the target item compared to any existing tasks in state. Used for shift click selection, where the aim is to select multiple items over a range of indexes.
+ */
 const toggleRangeSelection = (
   task: TaskType,
   tasks: TaskType[],

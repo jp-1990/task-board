@@ -11,7 +11,7 @@ import styles from "./Task.module.css";
 const isBeingDragged = (task: TaskType, selectedTasks: TaskType[]) =>
   !!selectedTasks.find(({ task_id }) => task_id === task.task_id);
 
-interface TaskProps {
+interface Props {
   task: TaskType;
   tasks: TaskType[];
   index: number;
@@ -19,7 +19,12 @@ interface TaskProps {
   setSelected: React.Dispatch<React.SetStateAction<TaskType[]>>;
   dragging: boolean;
 }
-const Task: React.FC<TaskProps> = ({
+/**
+ *
+ * @param {Props} props - {@link Props}
+ * @returns Component to display task details and provide functionality to the user to move, update, delete and mark a task as complete.
+ */
+const Task: React.FC<Props> = ({
   task,
   tasks,
   index,
@@ -33,7 +38,7 @@ const Task: React.FC<TaskProps> = ({
   const { deleteTask, completeTask } = apiQueries;
   const dispatch = useDispatch();
 
-  const handleOnClick: React.MouseEventHandler<HTMLLIElement> = (e) => {
+  const handleSelectTask: React.MouseEventHandler<HTMLLIElement> = (e) => {
     if (e.ctrlKey || e.metaKey) {
       toggle.groupSelection(task, selected, setSelected);
     } else if (e.shiftKey) {
@@ -65,10 +70,19 @@ const Task: React.FC<TaskProps> = ({
     }
   };
 
-  const toggleShowUpdate = (e: any) => {
+  const toggleShowUpdateForm = (e: any) => {
     e.stopPropagation();
     setShowUpdate((prev) => !prev);
   };
+
+  // determine style classNames
+  const completedStyles = completed ? styles.completed : "";
+  const selectedStyles = selected?.find((el) => el.task_id === task_id)
+    ? `${styles.selected}`
+    : "";
+  const draggingStyles =
+    dragging && isBeingDragged(task, selected) ? `${styles.dragging}` : "";
+
   return (
     <Draggable
       key={task_id}
@@ -78,16 +92,8 @@ const Task: React.FC<TaskProps> = ({
     >
       {(provided) => (
         <li
-          onClick={handleOnClick}
-          className={`${styles.task} ${completed ? styles.completed : ""} ${
-            selected?.find((el) => el.task_id === task_id)
-              ? `${styles.selected}`
-              : ""
-          } ${
-            dragging && isBeingDragged(task, selected)
-              ? `${styles.dragging}`
-              : ""
-          }`}
+          onClick={handleSelectTask}
+          className={`${styles.task} ${completedStyles} ${selectedStyles} ${draggingStyles}`}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
@@ -96,7 +102,7 @@ const Task: React.FC<TaskProps> = ({
           <h6>{new Date(deadline).toLocaleString()}</h6>
           <span>{description}</span>
           {!showUpdate && (
-            <button onClick={toggleShowUpdate}>Show Update Form</button>
+            <button onClick={toggleShowUpdateForm}>Show Update Form</button>
           )}
           {showUpdate && (
             <>
@@ -108,7 +114,7 @@ const Task: React.FC<TaskProps> = ({
                 deadline={deadline}
                 setShowUpdate={setShowUpdate}
               />
-              <button onClick={toggleShowUpdate}>Hide Update Form</button>
+              <button onClick={toggleShowUpdateForm}>Hide Update Form</button>
             </>
           )}
           <div className={styles.buttonDiv}>

@@ -15,7 +15,7 @@
   background-color: rgb(74, 192, 255);
 }
 .dragging {
-  background-color: gray;
+  background-color: rgb(189, 189, 189);
 }
 .completed {
   border-color: rgb(0, 174, 0);

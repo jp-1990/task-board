@@ -11,8 +11,12 @@ import "./App.css";
 
 function App() {
   const [listName, setListName] = useState<string>("");
+  const [selectedTasks, setSelectedTasks] = useState<TaskType[]>([]);
+  const [dragging, setDragging] = useState<boolean>(false);
+
   const lists = useSelector((state) => state.lists.value);
   const dispatch = useDispatch();
+
   const { getAllItems, createList } = apiQueries;
 
   // entry point for data (query all items)
@@ -42,9 +46,6 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [selectedTasks, setSelectedTasks] = useState<TaskType[]>([]);
-  const [dragging, setDragging] = useState<boolean>(false);
-
   const handleOnDragStart = () => setDragging(true);
   const handleOnDragEnd = (result: DropResult) => {
     if (!result.destination) return;
@@ -64,6 +65,7 @@ function App() {
   const handleListNameInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => setListName(event.target.value);
+
   const handleCreateList = async () => {
     const newList = await createList({ name: listName });
     dispatch(
@@ -74,27 +76,36 @@ function App() {
         tasks: [],
       })
     );
+    setListName("");
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h3>Task Board</h3>
-        <div className="create-list-container">
-          <span>New List:</span>
-          <input
-            value={listName}
-            onChange={handleListNameInputChange}
-            placeholder="List name..."
-          ></input>
-          <button onClick={handleCreateList}>Create New List</button>
+    <div className="app">
+      <header className="appHeader">
+        <div className="headerLeft">
+          <h3>Task Board</h3>
+          <div className="createListContainer">
+            <span>New List:</span>
+            <input
+              value={listName}
+              onChange={handleListNameInputChange}
+              placeholder="List name..."
+            ></input>
+            <button onClick={handleCreateList}>Create New List</button>
+          </div>
+        </div>
+        <div className="headerRight">
+          <span>
+            NOTE: API may take time to start if it has been in an idle state for
+            some time. This can take up to a couple of minutes.
+          </span>
         </div>
       </header>
       <DragDropContext
         onDragEnd={handleOnDragEnd}
         onDragStart={handleOnDragStart}
       >
-        <div className="List-container">
+        <div className="listContainer">
           {lists.map((list) => (
             <List
               key={list.list_id}

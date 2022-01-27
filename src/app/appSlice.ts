@@ -16,18 +16,23 @@ export const appSlice = createSlice({
   name: "app",
   initialState,
   reducers: {
+    // add a new list to state if that list is not already present
     addList: (state, action: PayloadAction<ListType>) => {
       if (
         !state.value.find(({ list_id }) => list_id === action.payload.list_id)
       )
         state.value = [...state.value, action.payload];
     },
+
+    // remove list from state by list_id
     removeList: (state, action: PayloadAction<number>) => {
       const newState = state.value.filter(
         ({ list_id }) => list_id !== action.payload
       );
       state.value = newState;
     },
+
+    // add a new task to the appropriate list in state by list_id
     addTask: (state, action: PayloadAction<TaskType>) => {
       const listIndex = state.value.findIndex((list) => {
         return list.list_id === +action.payload.list_id;
@@ -41,6 +46,7 @@ export const appSlice = createSlice({
         action.payload
       );
     },
+
     editTask: (
       state,
       action: PayloadAction<
@@ -64,6 +70,7 @@ export const appSlice = createSlice({
         ...action.payload,
       };
     },
+
     removeTask: (
       state,
       action: PayloadAction<{
@@ -83,6 +90,7 @@ export const appSlice = createSlice({
       );
     },
 
+    // based on the source and desination ids and indexs, slice tasks between lists
     moveTasks: (state, action: PayloadAction<MoveTasksArgs>) => {
       const { source, destination, tasks } = action.payload;
 

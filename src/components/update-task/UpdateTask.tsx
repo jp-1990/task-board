@@ -2,21 +2,23 @@ import React, { useState } from "react";
 import { editTask } from "../../app/appSlice";
 import { useDispatch } from "../../app/hooks";
 import { apiQueries } from "../../utils";
+import { TaskType } from "../../types";
 
 import styles from "./UpdateTask.module.css";
 
-interface Task {
-  name: string;
-  description: string;
-  deadline: string;
-  task_id: number;
-  list_id: number;
-}
-
+type Task = Pick<
+  TaskType,
+  "name" | "deadline" | "description" | "task_id" | "list_id"
+>;
 interface Props extends Task {
   setShowUpdate: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
+/**
+ *
+ * @param {Props} props - {@link Props}
+ *
+ * @description Component to accept user input and update the name, description and deadline of a task. Uses redux store and fires apiQuery.updateTask to perform update.
+ */
 const UpdateTask: React.FC<Props> = ({
   name,
   description,
@@ -33,7 +35,7 @@ const UpdateTask: React.FC<Props> = ({
   const { updateTask } = apiQueries;
   const dispatch = useDispatch();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTaskInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTask((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
@@ -51,25 +53,25 @@ const UpdateTask: React.FC<Props> = ({
   };
   const stopBubbling = (e: any) => e.stopPropagation();
   return (
-    <div onClick={stopBubbling} className={styles.updateTaskContainer}>
+    <div onClick={stopBubbling} className={styles.container}>
       <span>Update Task:</span>
       <input
         id="name"
         value={task.name}
-        onChange={handleChange}
+        onChange={handleTaskInputChange}
         placeholder="Task name..."
       />
       <input
         id="description"
         value={task.description}
-        onChange={handleChange}
+        onChange={handleTaskInputChange}
         placeholder="Task description..."
       />
       <input
         id="deadline"
         type={"datetime-local"}
         value={task.deadline}
-        onChange={handleChange}
+        onChange={handleTaskInputChange}
         placeholder="Task deadline..."
       />
       <button onClick={handleUpdateTask}>Update Task</button>

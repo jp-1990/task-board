@@ -57,7 +57,6 @@ class ApiQueries {
   };
 
   // delete list
-
   deleteList = async ({ id }: DeleteList) => {
     try {
       const result = await axios({
@@ -75,7 +74,6 @@ class ApiQueries {
 
   // TASKS
   // create task
-
   createTask = async ({
     name,
     deadline,
@@ -102,7 +100,6 @@ class ApiQueries {
   };
 
   // update task
-
   updateTask = async ({ task_id, name, deadline, description }: UpdateTask) => {
     try {
       const result = await axios({
@@ -122,7 +119,6 @@ class ApiQueries {
   };
 
   // update task index
-
   updateTaskIndex = async ({ id, index, list_id }: UpdateTaskIndex) => {
     try {
       const result = await axios({
@@ -141,7 +137,6 @@ class ApiQueries {
   };
 
   // delete task
-
   deleteTask = async ({ id }: DeleteTask) => {
     try {
       const result = await axios({
@@ -158,7 +153,6 @@ class ApiQueries {
   };
 
   // complete task
-
   completeTask = async ({ id, boolean }: CompleteTask) => {
     try {
       const result = await axios({
