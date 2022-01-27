@@ -35,7 +35,8 @@ const Task: React.FC<Props> = ({
   dragging,
 }) => {
   const [showUpdate, setShowUpdate] = useState<boolean>(false);
-  const { task_id, list_id, name, description, deadline, completed } = task;
+  const { task_id, list_id, name, description, deadline, completed, overdue } =
+    task;
 
   const dispatch = useDispatch();
 
@@ -78,6 +79,7 @@ const Task: React.FC<Props> = ({
 
   // determine style classNames
   const completedStyles = completed ? styles.completed : "";
+  const overdueStyles = !completed && overdue ? styles.overdue : "";
   const selectedStyles = selected?.find((el) => el.task_id === task_id)
     ? `${styles.selected}`
     : "";
@@ -94,7 +96,7 @@ const Task: React.FC<Props> = ({
       {(provided) => (
         <li
           onClick={handleSelectTask}
-          className={`${styles.task} ${completedStyles} ${selectedStyles} ${draggingStyles}`}
+          className={`${styles.task} ${completedStyles} ${overdueStyles} ${selectedStyles} ${draggingStyles}`}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}

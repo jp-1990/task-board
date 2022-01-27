@@ -20,6 +20,9 @@
 .completed {
   border-color: rgb(0, 174, 0);
 }
+.overdue {
+  border-color: rgb(174, 0, 0);
+}
 
 .task h3 {
   margin: 0;
