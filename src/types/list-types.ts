@@ -1,8 +1,9 @@
 import TaskType from "./task-types";
 
 export interface ListType {
-  id: string;
+  list_id: number;
   name: string;
+  type: "list";
   tasks: TaskType[];
 }
 
