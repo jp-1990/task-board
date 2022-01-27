@@ -9,6 +9,8 @@ import { apiQueries } from "./utils";
 import { TaskType } from "./types";
 import "./App.css";
 
+const { getAllItems, createList } = apiQueries;
+
 function App() {
   const [listName, setListName] = useState<string>("");
   const [selectedTasks, setSelectedTasks] = useState<TaskType[]>([]);
@@ -16,8 +18,6 @@ function App() {
 
   const lists = useSelector((state) => state.lists.value);
   const dispatch = useDispatch();
-
-  const { getAllItems, createList } = apiQueries;
 
   // entry point for data (query all items)
   useEffect(() => {

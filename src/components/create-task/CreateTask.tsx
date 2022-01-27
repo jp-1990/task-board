@@ -6,6 +6,8 @@ import { TaskType } from "../../types";
 
 import styles from "./CreateTask.module.css";
 
+const { createTask } = apiQueries;
+
 type Task = Pick<TaskType, "name" | "deadline" | "description">;
 interface Props {
   list_id: number;
@@ -24,7 +26,6 @@ const CreateTask: React.FC<Props> = ({ list_id, nextIndex }) => {
   };
 
   const [task, setTask] = useState<Task>(initialState);
-  const { createTask } = apiQueries;
   const dispatch = useDispatch();
 
   const handleTaskInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

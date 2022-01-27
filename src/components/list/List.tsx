@@ -6,6 +6,8 @@ import { useDispatch } from "../../app/hooks";
 import { apiQueries } from "../../utils";
 import { CreateTask } from "../create-task";
 
+const { deleteList } = apiQueries;
+
 interface Props {
   name: string;
   length: number;
@@ -18,7 +20,6 @@ interface Props {
  */
 const List: React.FC<Props> = ({ name, id, length, children }) => {
   const dispatch = useDispatch();
-  const { deleteList } = apiQueries;
 
   const handleDeleteList = async () => {
     dispatch(removeList(id));

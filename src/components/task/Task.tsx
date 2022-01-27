@@ -8,6 +8,8 @@ import { apiQueries } from "../../utils";
 import { editTask, removeTask } from "../../app/appSlice";
 import styles from "./Task.module.css";
 
+const { deleteTask, completeTask } = apiQueries;
+
 const isBeingDragged = (task: TaskType, selectedTasks: TaskType[]) =>
   !!selectedTasks.find(({ task_id }) => task_id === task.task_id);
 
@@ -35,7 +37,6 @@ const Task: React.FC<Props> = ({
   const [showUpdate, setShowUpdate] = useState<boolean>(false);
   const { task_id, list_id, name, description, deadline, completed } = task;
 
-  const { deleteTask, completeTask } = apiQueries;
   const dispatch = useDispatch();
 
   const handleSelectTask: React.MouseEventHandler<HTMLLIElement> = (e) => {

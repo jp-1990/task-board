@@ -6,6 +6,8 @@ import { TaskType } from "../../types";
 
 import styles from "./UpdateTask.module.css";
 
+const { updateTask } = apiQueries;
+
 type Task = Pick<
   TaskType,
   "name" | "deadline" | "description" | "task_id" | "list_id"
@@ -32,7 +34,6 @@ const UpdateTask: React.FC<Props> = ({
     description,
     deadline,
   });
-  const { updateTask } = apiQueries;
   const dispatch = useDispatch();
 
   const handleTaskInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
