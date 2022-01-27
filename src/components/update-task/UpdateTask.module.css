@@ -1,0 +1,13 @@
+.updateTaskContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  margin: 1rem 0 0.5rem 0;
+}
+.updateTaskContainer span {
+  font-size: 1rem;
+}
+.updateTaskContainer button {
+  margin: 0.3rem 0;
+}
